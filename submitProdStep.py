@@ -78,7 +78,7 @@ scriptFile.write('localdir=`pwd`\n')
 scriptFile.write('export HOME=%s\n'%(os.environ['HOME']))
 scriptFile.write('export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch \n')
 scriptFile.write('source $VO_CMS_SW_DIR/cmsset_default.sh \n')
-scriptFile.write('cd %s/\n'%(os.getcwd()))
+scriptFile.write('cd %s/../\n'%(os.getcwd()))
 scriptFile.write('eval `scramv1 runtime -sh`\n')
 scriptFile.write('cd $localdir\n')
 

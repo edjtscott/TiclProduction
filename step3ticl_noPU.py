@@ -172,15 +172,10 @@ process.ticlTrackstersEM3 = process.ticlTrackstersEM1.clone()
 process.ticlTrackstersEM3.filtered_mask = cms.InputTag("filteredLayerClustersEM3","EM3")
 process.ticlTrackstersEM3.itername = cms.string('EM3')
 
-process.ticlTrackstersEM1relax = process.ticlTrackstersEM1.clone()
-process.ticlTrackstersEM1relax.maxLayer_cospointing = cms.int32(18)
-process.ticlTrackstersEM1relax.maxLayer_costheta = cms.int32(18)
-process.ticlTrackstersEM1relax.itername = cms.string('EM1relax')
+#max_missing_layers_in_trackster = cms.int32(1),
+#skip_layers = cms.int32(2),
+#max_out_in_hops = cms.int32(1),
 
-process.ticlTrackstersEM2relax = process.ticlTrackstersEM2.clone()
-process.ticlTrackstersEM2relax.maxLayer_cospointing = cms.int32(18)
-process.ticlTrackstersEM2relax.maxLayer_costheta = cms.int32(18)
-process.ticlTrackstersEM2relax.itername = cms.string('EM2relax')
 
 process.ticlTrackstersEM3relax = process.ticlTrackstersEM3.clone()
 process.ticlTrackstersEM3relax.maxLayer_cospointing = cms.int32(18)
@@ -247,20 +242,6 @@ process.ticlTrackstersDummy3.filtered_mask = cms.InputTag("filteredLayerClusters
 process.ticlTrackstersDummy3.itername = "DUMMY3"
 
 
-
-#relax parameters to find lower pT photons
-#process.ticlTrackstersEM.min_cos_pointing = cms.double(0.5)#def 0.9
-#process.ticlTrackstersEM.min_cos_theta = cms.double(0.5)#def 0.978
-##new parameters
-#process.ticlTrackstersEM.energy_em_over_total_threshold = cms.double(0.)
-#process.ticlTrackstersEM.max_longitudinal_sigmaPCA = cms.double(9999)
-#process.ticlTrackstersEM.max_missing_layers_in_trackster = cms.int32(9999)
-#process.ticlTrackstersEM.min_layers_per_trackster = cms.int32(5)
-#process.ticlTrackstersEM.shower_start_max_layer = cms.int32(9999)
-#process.ticlTrackstersEM.skip_layers = cms.int32(0)
-#process.ticlTrackstersEM.maxLayer_cospointing = cms.int32(18)
-#process.ticlTrackstersEM.maxLayer_costheta = cms.int32(999)
-
 #cms.Path(
 #HGCalUncalibRecHit,HGCalRecHit,hgcalRecHitMapProducer,
 #hgcalLayerClusters,hgcalMultiClusters,particleFlowRecHitHGC,particleFlowClusterHGCal,particleFlowClusterHGCalFromMultiCl,
@@ -279,8 +260,8 @@ process.ticlTrackstersDummy3.itername = "DUMMY3"
 
 process.ticl_step = cms.Path(
     process.ticlLayerTileProducer*
-    process.ticlSeedingGlobal*process.filteredLayerClustersEM1*process.ticlTrackstersDummy1*process.ticlTrackstersEM1*process.ticlTrackstersEM1relax*
-    process.ticlSeedingGlobal*process.filteredLayerClustersEM2*process.ticlTrackstersDummy2*process.ticlTrackstersEM2*process.ticlTrackstersEM2relax*
+    process.ticlSeedingGlobal*process.filteredLayerClustersEM1*process.ticlTrackstersDummy1*process.ticlTrackstersEM1*
+    process.ticlSeedingGlobal*process.filteredLayerClustersEM2*process.ticlTrackstersDummy2*process.ticlTrackstersEM2*
     process.ticlSeedingGlobal*process.filteredLayerClustersEM3*process.ticlTrackstersDummy3*process.ticlTrackstersEM3*process.ticlTrackstersEM3relax*
     process.ticlSeedingGlobal*process.filteredLayerClustersEMDef*process.ticlTrackstersEMDef
 )
