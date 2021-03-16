@@ -85,11 +85,22 @@ process.FEVTTICLoutput = cms.OutputModule("PoolOutputModule",
         'keep *_hgcalMultiClusters_*_*', 
         'keep *_iterHGCalMultiClusters_*_*',
         'keep *_ticlTracksters*_*_*', 
+        'keep *_ticlSimTracksters*_*_*',
         'keep *_ticlMultiClustersFromTracksters*_*_*', 
+        'keep *_ticlMultiClustersFromSimTracksters*_*_*', 
         'keep edmHepMCProduct_source_*_*', 
-        'keep *_genParticle_*_*', 
+        'keep edmHepMCProduct_generatorSmeared_*_*', 
+        'keep *_genParticle*_*_*', 
+        'keep recoGenMETs_*_*_*', 
+        'keep *_ak4GenJets_*_*', 
+        'keep *_ak8GenJets_*_*', 
+        'keep *_ak4GenJetsNoNu_*_*', 
+        'keep *_ak8GenJetsNoNu_*_*', 
         'keep *_generator_*_*', 
-        'keep *_mix_MergedCaloTruth_*'
+        'keep *_mix*_MergedCaloTruth_*',
+        'keep LHERunInfoProduct_*_*_*', 
+        'keep LHEEventProduct_*_*_*', 
+        'keep *_genPUProtons_*_*', 
     ) ),
     splitLevel = cms.untracked.int32(0)
 )
@@ -257,8 +268,21 @@ process.ticlTrackstersDummy3.itername = "DUMMY3"
 #)
 
 
+from SimCalorimetry.HGCalSimProducers.hgcHitAssociation_cfi import lcAssocByEnergyScoreProducer, scAssocByEnergyScoreProducer
+from SimCalorimetry.HGCalAssociatorProducers.LCToCPAssociation_cfi import layerClusterCaloParticleAssociation as layerClusterCaloParticleAssociationProducer
+from SimCalorimetry.HGCalAssociatorProducers.LCToSCAssociation_cfi import layerClusterSimClusterAssociation as layerClusterSimClusterAssociationProducer
+
+from RecoHGCal.TICL.SimTracksters_cff import *
+
+
 
 process.ticl_step = cms.Path(
+    process.hgcalRecHitMapProducer*
+    process.lcAssocByEnergyScoreProducer*
+    process.layerClusterCaloParticleAssociationProducer*
+    process.scAssocByEnergyScoreProducer*
+    process.layerClusterSimClusterAssociationProducer*
+    process.filteredLayerClustersSimTracksters*process.ticlSimTracksters*process.ticlMultiClustersFromSimTracksters*
     process.ticlLayerTileProducer*
     process.ticlSeedingGlobal*process.filteredLayerClustersEM1*process.ticlTrackstersDummy1*process.ticlTrackstersEM1*
     process.ticlSeedingGlobal*process.filteredLayerClustersEM2*process.ticlTrackstersDummy2*process.ticlTrackstersEM2*
@@ -267,6 +291,7 @@ process.ticl_step = cms.Path(
 )
 
 process.FEVTTICLoutput_step = cms.EndPath(process.FEVTTICLoutput)
+
 
 # Schedule definition
 process.schedule = cms.Schedule(process.ticl_step,process.FEVTTICLoutput_step)
