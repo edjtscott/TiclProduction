@@ -30,9 +30,11 @@ process.maxEvents = cms.untracked.PSet(
 
 # Input source
 process.source = cms.Source("PoolSource",
+    #fileNames = cms.untracked.vstring('file:/eos/user/s/shghosh/HGCALNTUPS/STEP3_PI.root'),
     fileNames = cms.untracked.vstring('file:step3.root'),
     secondaryFileNames = cms.untracked.vstring()
 )
+process.source.duplicateCheckMode = cms.untracked.string('noDuplicateCheck')
 
 process.options = cms.untracked.PSet(
     FailPath = cms.untracked.vstring(),
@@ -111,147 +113,20 @@ process.FEVTTICLoutput = cms.OutputModule("PoolOutputModule",
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic_T15', '')
 
+#rerun default iterations
+from RecoHGCal.TICL.TrkEMStep_cff import *
+from RecoHGCal.TICL.EMStep_cff import *
+from RecoHGCal.TICL.TrkStep_cff import *
+from RecoHGCal.TICL.HADStep_cff import *
+#from RecoHGCal.TICL.MIPStep_cff import *
+
 #make several TiCL iterations
+process.load('TiclProduction.Configuration.myDUMMYiterations_cff')
+process.load('TiclProduction.Configuration.myEMiterations_cff')
+process.load('TiclProduction.Configuration.myHADiterations_cff')
+process.load('TiclProduction.Configuration.myTRKiterations_cff')
 
-process.filteredLayerClustersEM1 = cms.EDProducer("FilteredLayerClustersProducer",
-    LayerClusters = cms.InputTag("hgcalLayerClusters"),
-    LayerClustersInputMask = cms.InputTag("hgcalLayerClusters","InitialLayerClustersMask"),
-    algo_number = cms.int32(8),
-    clusterFilter = cms.string('ClusterFilterByAlgoAndSizeAndLayerRange'),
-    iteration_label = cms.string('EM1'),
-    max_cluster_size = cms.int32(9999),
-    max_layerId = cms.int32(30),
-    mightGet = cms.optional.untracked.vstring,
-    min_cluster_size = cms.int32(1),
-    min_layerId = cms.int32(0)
-)
-
-process.filteredLayerClustersEM2 = process.filteredLayerClustersEM1.clone()
-process.filteredLayerClustersEM2.min_cluster_size = cms.int32(2)
-process.filteredLayerClustersEM2.iteration_label = cms.string('EM2')
-
-process.filteredLayerClustersEM3 = process.filteredLayerClustersEM1.clone()
-process.filteredLayerClustersEM3.min_cluster_size = cms.int32(3)
-process.filteredLayerClustersEM3.iteration_label = cms.string('EM3')
-
-process.ticlTrackstersEM1 = cms.EDProducer(
-    "TrackstersProducer",
-    algo_verbosity = cms.int32(0),
-    detector = cms.string('HGCAL'),
-    eid_graph_path = cms.string('RecoHGCal/TICL/data/tf_models/energy_id_v0.pb'),
-    eid_input_name = cms.string('input'),
-    eid_min_cluster_energy = cms.double(1),
-    eid_n_clusters = cms.int32(10),
-    eid_n_layers = cms.int32(50),
-    eid_output_name_energy = cms.string('output/regressed_energy'),
-    eid_output_name_id = cms.string('output/id_probabilities'),
-    energy_em_over_total_threshold = cms.double(0.0),
-    etaLimitIncreaseWindow = cms.double(2.1),
-    filter_on_categories = cms.vint32(0, 1),
-    filtered_mask = cms.InputTag("filteredLayerClustersEM1","EM1"),
-    itername = cms.string('EM1'),
-    layer_clusters = cms.InputTag("hgcalLayerClusters"),
-    layer_clusters_hfnose_tiles = cms.InputTag("ticlLayerTileHFNose"),
-    layer_clusters_tiles = cms.InputTag("ticlLayerTileProducer"),
-    max_delta_time = cms.double(3),
-    max_longitudinal_sigmaPCA = cms.double(9999),
-    max_missing_layers_in_trackster = cms.int32(1),
-    max_out_in_hops = cms.int32(1),
-    mightGet = cms.optional.untracked.vstring,
-    min_cos_pointing = cms.double(0.9),
-    min_cos_theta = cms.double(0.97),
-    maxLayer_cospointing = cms.int32(999),
-    maxLayer_costheta = cms.int32(999),
-    min_layers_per_trackster = cms.int32(5),
-    oneTracksterPerTrackSeed = cms.bool(False),
-    original_mask = cms.InputTag("hgcalLayerClusters","InitialLayerClustersMask"),
-    out_in_dfs = cms.bool(True),
-    pid_threshold = cms.double(-1.0),
-    promoteEmptyRegionToTrackster = cms.bool(False),
-    root_doublet_max_distance_from_seed_squared = cms.double(9999),
-    seeding_regions = cms.InputTag("ticlSeedingGlobal"),
-    shower_start_max_layer = cms.int32(9999),
-    skip_layers = cms.int32(2),
-    time_layerclusters = cms.InputTag("hgcalLayerClusters","timeLayerCluster")
-)
-
-process.ticlTrackstersEM2 = process.ticlTrackstersEM1.clone()
-process.ticlTrackstersEM2.filtered_mask = cms.InputTag("filteredLayerClustersEM2","EM2")
-process.ticlTrackstersEM2.itername = cms.string('EM2')
-
-process.ticlTrackstersEM3 = process.ticlTrackstersEM1.clone()
-process.ticlTrackstersEM3.filtered_mask = cms.InputTag("filteredLayerClustersEM3","EM3")
-process.ticlTrackstersEM3.itername = cms.string('EM3')
-
-#max_missing_layers_in_trackster = cms.int32(1),
-#skip_layers = cms.int32(2),
-#max_out_in_hops = cms.int32(1),
-
-
-process.ticlTrackstersEM3relax = process.ticlTrackstersEM3.clone()
-process.ticlTrackstersEM3relax.maxLayer_cospointing = cms.int32(18)
-process.ticlTrackstersEM3relax.maxLayer_costheta = cms.int32(18)
-process.ticlTrackstersEM3relax.itername = cms.string('EM3relax')
-
-process.filteredLayerClustersEMDef = process.filteredLayerClustersEM.clone()
-process.filteredLayerClustersEMDef.LayerClustersInputMask = cms.InputTag("hgcalLayerClusters","InitialLayerClustersMask")
-process.filteredLayerClustersEMDef.iteration_label = cms.string('EMDef')
-
-process.ticlTrackstersEMDef = process.ticlTrackstersEM.clone()
-process.ticlTrackstersEMDef.filtered_mask = cms.InputTag("filteredLayerClustersEMDef","EMDef")
-process.ticlTrackstersEMDef.original_mask = cms.InputTag("hgcalLayerClusters","InitialLayerClustersMask")
-process.ticlTrackstersEMDef.itername = cms.string('EMDEF')
-
-process.ticlTrackstersDummy1 = cms.EDProducer(
-    "TrackstersProducer",
-    algo_verbosity = cms.int32(0),
-    detector = cms.string('HGCAL'),
-    eid_graph_path = cms.string('RecoHGCal/TICL/data/tf_models/energy_id_v0.pb'),
-    eid_input_name = cms.string('input'),
-    eid_min_cluster_energy = cms.double(1),
-    eid_n_clusters = cms.int32(10),
-    eid_n_layers = cms.int32(50),
-    eid_output_name_energy = cms.string('output/regressed_energy'),
-    eid_output_name_id = cms.string('output/id_probabilities'),
-    energy_em_over_total_threshold = cms.double(0.0),
-    etaLimitIncreaseWindow = cms.double(2.1),
-    filter_on_categories = cms.vint32(0, 1),
-    filtered_mask = cms.InputTag("filteredLayerClustersEM1","EM1"),
-    itername = cms.string('DUMMY1'),
-    layer_clusters = cms.InputTag("hgcalLayerClusters"),
-    layer_clusters_hfnose_tiles = cms.InputTag("ticlLayerTileHFNose"),
-    layer_clusters_tiles = cms.InputTag("ticlLayerTileProducer"),
-    max_delta_time = cms.double(-1.),
-    max_longitudinal_sigmaPCA = cms.double(9999),
-    max_missing_layers_in_trackster = cms.int32(1),
-    max_out_in_hops = cms.int32(10),
-    mightGet = cms.optional.untracked.vstring,
-    min_cos_pointing = cms.double(0.),
-    min_cos_theta = cms.double(0.),
-    maxLayer_cospointing = cms.int32(999),
-    maxLayer_costheta = cms.int32(999),
-    min_layers_per_trackster = cms.int32(5),
-    oneTracksterPerTrackSeed = cms.bool(False),
-    original_mask = cms.InputTag("hgcalLayerClusters","InitialLayerClustersMask"),
-    out_in_dfs = cms.bool(True),
-    pid_threshold = cms.double(-1.0),
-    promoteEmptyRegionToTrackster = cms.bool(False),
-    root_doublet_max_distance_from_seed_squared = cms.double(9999),
-    seeding_regions = cms.InputTag("ticlSeedingGlobal"),
-    shower_start_max_layer = cms.int32(9999),
-    skip_layers = cms.int32(2),
-    time_layerclusters = cms.InputTag("hgcalLayerClusters","timeLayerCluster")
-)
-
-
-process.ticlTrackstersDummy2 = process.ticlTrackstersDummy1.clone()
-process.ticlTrackstersDummy2.filtered_mask = cms.InputTag("filteredLayerClustersEM2", "EM2")
-process.ticlTrackstersDummy2.itername = "DUMMY2"
-
-process.ticlTrackstersDummy3 = process.ticlTrackstersDummy1.clone()
-process.ticlTrackstersDummy3.filtered_mask = cms.InputTag("filteredLayerClustersEM3", "EM3")
-process.ticlTrackstersDummy3.itername = "DUMMY3"
-
+process.load('TiclProduction.Configuration.mySIMiterations_cff')
 
 #cms.Path(
 #HGCalUncalibRecHit,HGCalRecHit,hgcalRecHitMapProducer,
@@ -267,34 +142,37 @@ process.ticlTrackstersDummy3.itername = "DUMMY3"
 #pfTICL,hgcalTrackCollection,
 #)
 
+#process.sim_path = cms.Sequence(process.sim_task)
 
-from SimCalorimetry.HGCalSimProducers.hgcHitAssociation_cfi import lcAssocByEnergyScoreProducer, scAssocByEnergyScoreProducer
-from SimCalorimetry.HGCalAssociatorProducers.LCToCPAssociation_cfi import layerClusterCaloParticleAssociation as layerClusterCaloParticleAssociationProducer
-from SimCalorimetry.HGCalAssociatorProducers.LCToSCAssociation_cfi import layerClusterSimClusterAssociation as layerClusterSimClusterAssociationProducer
+process.tile_task = cms.Task(process.ticlLayerTileProducer)
 
-from RecoHGCal.TICL.SimTracksters_cff import *
-
-
-
-process.ticl_step = cms.Path(
-    process.hgcalRecHitMapProducer*
-    process.lcAssocByEnergyScoreProducer*
-    process.layerClusterCaloParticleAssociationProducer*
-    process.scAssocByEnergyScoreProducer*
-    process.layerClusterSimClusterAssociationProducer*
-    process.filteredLayerClustersSimTracksters*process.ticlSimTracksters*process.ticlMultiClustersFromSimTracksters*
-    process.ticlLayerTileProducer*
-    process.ticlSeedingGlobal*process.filteredLayerClustersEM1*process.ticlTrackstersDummy1*process.ticlTrackstersEM1*
-    process.ticlSeedingGlobal*process.filteredLayerClustersEM2*process.ticlTrackstersDummy2*process.ticlTrackstersEM2*
-    process.ticlSeedingGlobal*process.filteredLayerClustersEM3*process.ticlTrackstersDummy3*process.ticlTrackstersEM3*process.ticlTrackstersEM3relax*
-    process.ticlSeedingGlobal*process.filteredLayerClustersEMDef*process.ticlTrackstersEMDef
+process.def_ticl = cms.Task(
+    process.ticlTrkEMStepTask,process.ticlEMStepTask,
+    process.ticlTrkStepTask,process.ticlHADStepTask
 )
+
+
+process.ticl_seq = cms.Sequence(
+    process.sim_task,
+    process.tile_task,
+    process.def_ticl,
+    process.dummy_task,
+    process.em_task,
+    process.had_task,
+    process.trk_task
+)
+
+#process.ticl_seq = cms.Sequence(process.ticl_task)
+
+process.ticl_step = cms.Path(process.ticl_seq)
 
 process.FEVTTICLoutput_step = cms.EndPath(process.FEVTTICLoutput)
 
 
 # Schedule definition
-process.schedule = cms.Schedule(process.ticl_step,process.FEVTTICLoutput_step)
+process.schedule = cms.Schedule(
+    process.ticl_step,
+    process.FEVTTICLoutput_step)
 
 # customisation of the process.
 

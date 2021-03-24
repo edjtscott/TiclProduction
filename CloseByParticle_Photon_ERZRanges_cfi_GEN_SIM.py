@@ -13,6 +13,12 @@ options.register('generatorRandomSeed',
                  VarParsing.varType.int,
                  "Random seed for generator process")
 
+options.register('pdgid',
+                 22,
+                 VarParsing.multiplicity.singleton,
+                 VarParsing.varType.int,
+                 "PDG ID for particle gun")
+
 options.register('minpT',
                  4.95,
                  VarParsing.multiplicity.singleton,
@@ -146,7 +152,7 @@ process.generator = cms.EDProducer(
                 MinPhi = cms.double(-3.14159265359),
                 NParticles = cms.int32(1),
                 Overlapping = cms.bool(False),
-                PartID = cms.vint32(22),
+                PartID = cms.vint32(options.pdgid),
                 Pointing = cms.bool(True),
                 #RMax = cms.double(120),
                 #RMin = cms.double(60),
