@@ -23,6 +23,52 @@ process.load('DQMServices.Core.DQMStoreNonLegacy_cff')
 process.load('DQMOffline.Configuration.DQMOfflineMC_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
+#process.MessageLogger = cms.Service("MessageLogger",
+#                                       destinations = cms.untracked.vstring("debug"),
+#                                     debugModules = cms.untracked.vstring("*"),
+#                                     categories = cms.untracked.vstring("HGCPatternRecoByCA"),
+#                                     debug = cms.untracked.PSet(threshold = cms.untracked.string("DEBUG"),
+#                                                                        DEBUG = cms.untracked.PSet(limit = cms.untracked.int32(0)),
+#                                                                        default = cms.untracked.PSet(limit = cms.untracked.int32(0)),
+#                                                                        HGCPatternRecoByCA = cms.untracked.PSet(limit = cms.untracked.int32(100000000))
+#                                                                        )
+#                                     )
+
+
+# MessageLogger customizations
+#process.MessageLogger.cerr.enable = False
+#process.MessageLogger.cout.enable = False
+#labels = ['SimTracks', 'SimVertices', 'GenParticles', 'TrackingParticles', 'CaloParticles', 'SimClusters']
+#messageLogger = dict()
+#for category in labels:
+#    main_key = '%sMessageLogger'%(category)
+#    category_key = 'CaloParticleDebugger%s'%(category)
+#    messageLogger[main_key] = dict(
+#            filename = '%s_%s.log' % (input_filename.replace('.root',''), category),
+#            threshold = 'INFO',
+#            default = dict(limit=0)
+#            )
+#    messageLogger[main_key][category_key] = dict(limit=-1)
+#    # First create defaults
+#    setattr(process.MessageLogger.files, category, dict())
+#    # Then modify them
+#    setattr(process.MessageLogger.files, category, messageLogger[main_key])
+
+
+#process.MessageLogger = cms.Service(
+#    "MessageLogger",
+#    destinations       =  cms.untracked.vstring('debugmessages','cerr'),
+#    #categories         = cms.untracked.vstring('*'),
+#    debugModules       = cms.untracked.vstring('*'),
+#    debugmessages      = cms.untracked.PSet(
+#        threshold =  cms.untracked.string('DEBUG'),
+#    ),
+#    cerr               = cms.untracked.PSet(
+#        threshold  = cms.untracked.string('INFO') 
+#    )
+#)
+
+
 process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(-1),
     output = cms.optional.untracked.allowed(cms.int32,cms.PSet)
@@ -34,7 +80,10 @@ process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring('file:step3.root'),
     secondaryFileNames = cms.untracked.vstring()
 )
+
 process.source.duplicateCheckMode = cms.untracked.string('noDuplicateCheck')
+#process.source.skipEvents = cms.untracked.uint32(38)
+
 
 process.options = cms.untracked.PSet(
     FailPath = cms.untracked.vstring(),
@@ -120,6 +169,11 @@ from RecoHGCal.TICL.TrkStep_cff import *
 from RecoHGCal.TICL.HADStep_cff import *
 #from RecoHGCal.TICL.MIPStep_cff import *
 
+#ticlTrackstersTrkEM.algo_verbosity = 5
+#ticlTrackstersEM.algo_verbosity = 5
+#ticlTrackstersTrk.algo_verbosity = 5
+#ticlTrackstersHAD.algo_verbosity = 5
+
 #make several TiCL iterations
 process.load('TiclProduction.Configuration.myDUMMYiterations_cff')
 process.load('TiclProduction.Configuration.myEMiterations_cff')
@@ -155,11 +209,11 @@ process.def_ticl = cms.Task(
 process.ticl_seq = cms.Sequence(
     process.sim_task,
     process.tile_task,
-    process.def_ticl,
     process.dummy_task,
     process.em_task,
     process.had_task,
-    process.trk_task
+    process.trk_task,
+    process.def_ticl,
 )
 
 #process.ticl_seq = cms.Sequence(process.ticl_task)
@@ -181,8 +235,8 @@ process.schedule = cms.Schedule(
 # Customisation from command line
 
 #Have logErrorHarvester wait for the same EDProducers to finish as those providing data for the OutputModule
-from FWCore.Modules.logErrorHarvester_cff import customiseLogErrorHarvesterUsingOutputCommands
-process = customiseLogErrorHarvesterUsingOutputCommands(process)
+#from FWCore.Modules.logErrorHarvester_cff import customiseLogErrorHarvesterUsingOutputCommands
+#process = customiseLogErrorHarvesterUsingOutputCommands(process)
 
 # Add early deletion of temporary data products to reduce peak memory need
 from Configuration.StandardSequences.earlyDeleteSettings_cff import customiseEarlyDelete

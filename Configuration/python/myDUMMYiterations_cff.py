@@ -2,16 +2,17 @@ import FWCore.ParameterSet.Config as cms
 
 from RecoHGCal.TICL.TICLSeedingRegions_cff import ticlSeedingGlobal
 
-filteredLayerClustersALL1 = cms.EDProducer("FilteredLayerClustersProducer",
+filteredLayerClustersALL1 = cms.EDProducer(
+    "FilteredLayerClustersProducer",
     LayerClusters = cms.InputTag("hgcalLayerClusters"),
     LayerClustersInputMask = cms.InputTag("hgcalLayerClusters","InitialLayerClustersMask"),
     algo_number = cms.int32(8),
     clusterFilter = cms.string('ClusterFilterByAlgoAndSize'),
     iteration_label = cms.string('ALL1'),
     max_cluster_size = cms.int32(9999),
-    max_layerId = cms.int32(100),
+    max_layerId = cms.int32(9999),
     mightGet = cms.optional.untracked.vstring,
-    min_cluster_size = cms.int32(1),
+    min_cluster_size = cms.int32(0),
     min_layerId = cms.int32(0)
 )
 
@@ -44,7 +45,7 @@ ticlTrackstersDummy1 = cms.EDProducer(
     layer_clusters_tiles = cms.InputTag("ticlLayerTileProducer"),
     max_delta_time = cms.double(-1.),
     max_longitudinal_sigmaPCA = cms.double(9999),
-    max_missing_layers_in_trackster = cms.int32(1),
+    max_missing_layers_in_trackster = cms.int32(9999),
     max_out_in_hops = cms.int32(10),
     mightGet = cms.optional.untracked.vstring,
     min_cos_pointing = cms.double(0.),
@@ -60,7 +61,7 @@ ticlTrackstersDummy1 = cms.EDProducer(
     root_doublet_max_distance_from_seed_squared = cms.double(9999),
     seeding_regions = cms.InputTag("ticlSeedingGlobal"),
     shower_start_max_layer = cms.int32(9999),
-    skip_layers = cms.int32(2),
+    skip_layers = cms.int32(1),
     time_layerclusters = cms.InputTag("hgcalLayerClusters","timeLayerCluster")
 )
 

@@ -24,7 +24,7 @@ ticlTrackstersHAD1 = cms.EDProducer(
     layer_clusters_tiles = cms.InputTag("ticlLayerTileProducer"),
     max_delta_time = cms.double(-1.),
     max_longitudinal_sigmaPCA = cms.double(9999),
-    max_missing_layers_in_trackster = cms.int32(1),
+    max_missing_layers_in_trackster = cms.int32(9999),
     max_out_in_hops = cms.int32(99),
     mightGet = cms.optional.untracked.vstring,
     min_cos_pointing = cms.double(0.798),
@@ -40,7 +40,7 @@ ticlTrackstersHAD1 = cms.EDProducer(
     root_doublet_max_distance_from_seed_squared = cms.double(9999),
     seeding_regions = cms.InputTag("ticlSeedingGlobal"),
     shower_start_max_layer = cms.int32(9999),
-    skip_layers = cms.int32(3),
+    skip_layers = cms.int32(1),
     time_layerclusters = cms.InputTag("hgcalLayerClusters","timeLayerCluster")
 )
 

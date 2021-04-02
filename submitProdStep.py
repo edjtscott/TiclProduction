@@ -18,11 +18,9 @@
 
 #for eta in 17 19 21 23 25 27; do for pT in 3 5 10 15 20 30 40 50 75 100 150 200; do for run in `seq 0 9`; do python submitProdStep.py -r $run -n 100 -s ${pT}${eta}${run} -d CloseByPhotons -w 23293.0_CloseByParticleGun+2026D49+CloseByParticle_Photon_ERZRanges_GenSimHLBeamSpot+DigiTrigger+RecoGlobal+HARVESTGlobal/ --config3=../step3_EMiterOnly_noPU.py -o ProdTiclEMNew -e /eos/cms/store/user/amagnan/HGCAL/TiCL/EMonlyNew --pT=${pT} --Eta=${eta} --minz=320 --PtEta=pt${pT}_eta${eta} -R 0;  done; done; done
 
-#step TiCL only
-#for eta in 17; do for pT in 3 5 10; do for run in `seq 0 9`; do python submitProdStep.py -r $run -n 100 -s ${pT}${eta}${run} -d CloseByPhotons  --skip-step1  --skip-step2  --skip-step3 --configTicl=step3ticl_noPU.py  -o ProdTiclEMNew -e /eos/cms/store/user/amagnan/HGCAL/TiCL/EMonlyNew -E /eos/cms/store/user/amagnan/HGCAL/TiCL/EMonlyNew/CloseByPhotons --pT=${pT} --Eta=${eta} --minz=320 --PtEta=pt${pT}_eta${eta} -R 0;  done; done; done
-
+#step TiCL only -- new sub example
 #pions
-#python submitProdStep.py -r -1 -n 0 -s 123678 -d ChargedPions  --skip-step1  --skip-step2  --skip-step3 --configTicl=step3ticl_noPU.py  -o ProdTiclEM/ -e /eos/user/a/amagnan/HGCAL/TiCL -E /eos/user/a/amagnan/HGCAL/TiCL --PtEta=mix -R -2 -S
+#for eta in 21; do for pT in 10 20 50 100 150 200; do python submitProdStep.py --nRuns=10 -n 0 -d ChargedPionsFromVtx --skip-step1  --skip-step2  --skip-step3 --configTicl=step3ticl_noPU.py  -o ProdTiclAll/ -e /eos/cms/store/user/amagnan/HGCAL/TiCL/ -E /eos/cms/store/user/amagnan/HGCAL/TiCL/ChargedPionsFromVtx --PtEta=pt${pT}_eta${eta} ; done; done
 
 import subprocess
 import os,sys

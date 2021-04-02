@@ -59,7 +59,7 @@ ticlTrackstersEM1 = cms.EDProducer(
     root_doublet_max_distance_from_seed_squared = cms.double(9999),
     seeding_regions = cms.InputTag("ticlSeedingGlobal"),
     shower_start_max_layer = cms.int32(9999),
-    skip_layers = cms.int32(2),
+    skip_layers = cms.int32(1),
     time_layerclusters = cms.InputTag("hgcalLayerClusters","timeLayerCluster")
 )
 
