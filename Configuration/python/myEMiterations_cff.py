@@ -71,6 +71,24 @@ ticlTrackstersEM3 = ticlTrackstersEM1.clone()
 ticlTrackstersEM3.filtered_mask = cms.InputTag("filteredLayerClustersEM3","EM3")
 ticlTrackstersEM3.itername = cms.string('EM3')
 
+ticlTrackstersEM3a = ticlTrackstersEM3.clone()
+ticlTrackstersEM3a.itername = cms.string('EM3a')
+ticlTrackstersEM3a.skip_layers = cms.int32(2)
+ticlTrackstersEM3a.max_missing_layers_in_trackster = cms.int32(1)
+
+ticlTrackstersEM3b = ticlTrackstersEM3.clone()
+ticlTrackstersEM3b.itername = cms.string('EM3b')
+ticlTrackstersEM3b.skip_layers = cms.int32(2)
+ticlTrackstersEM3b.max_missing_layers_in_trackster = cms.int32(9999)
+
+ticlTrackstersEM3c = ticlTrackstersEM3.clone()
+ticlTrackstersEM3c.itername = cms.string('EM3c')
+ticlTrackstersEM3c.skip_layers = cms.int32(1)
+ticlTrackstersEM3c.max_missing_layers_in_trackster = cms.int32(9999)
+
+
+
+
 #max_missing_layers_in_trackster = cms.int32(1),
 #skip_layers = cms.int32(2),
 #max_out_in_hops = cms.int32(1),
@@ -78,5 +96,6 @@ ticlTrackstersEM3.itername = cms.string('EM3')
 em_task =  cms.Task(
     ticlSeedingGlobal,filteredLayerClustersEM1,ticlTrackstersEM1,
     ticlSeedingGlobal,filteredLayerClustersEM2,ticlTrackstersEM2,
-    ticlSeedingGlobal,filteredLayerClustersEM3,ticlTrackstersEM3
+    ticlSeedingGlobal,filteredLayerClustersEM3,ticlTrackstersEM3,
+    ticlTrackstersEM3a,ticlTrackstersEM3b,ticlTrackstersEM3c
 )
