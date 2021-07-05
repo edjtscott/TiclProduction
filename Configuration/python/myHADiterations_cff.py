@@ -55,7 +55,7 @@ ticlTrackstersHAD3.itername = cms.string('HAD3')
 
 
 had_task = cms.Task(
-    ticlSeedingGlobal,filteredLayerClustersALL1,ticlTrackstersHAD1,
-    ticlSeedingGlobal,filteredLayerClustersALL2,ticlTrackstersHAD2,
+    #ticlSeedingGlobal,filteredLayerClustersALL1,ticlTrackstersHAD1,
+    #ticlSeedingGlobal,filteredLayerClustersALL2,ticlTrackstersHAD2,
     ticlSeedingGlobal,filteredLayerClustersALL3,ticlTrackstersHAD3
 )

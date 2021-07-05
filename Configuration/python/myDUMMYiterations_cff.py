@@ -76,7 +76,7 @@ ticlTrackstersDummy3.itername = "DUMMY3"
 
 
 dummy_task =  cms.Task(
-    ticlSeedingGlobal,filteredLayerClustersALL1,ticlTrackstersDummy1,
-    ticlSeedingGlobal,filteredLayerClustersALL2,ticlTrackstersDummy2,
+    #ticlSeedingGlobal,filteredLayerClustersALL1,ticlTrackstersDummy1,
+    #ticlSeedingGlobal,filteredLayerClustersALL2,ticlTrackstersDummy2,
     ticlSeedingGlobal,filteredLayerClustersALL3,ticlTrackstersDummy3
 )

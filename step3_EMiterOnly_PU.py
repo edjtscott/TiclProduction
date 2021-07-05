@@ -36,6 +36,7 @@ process.maxEvents = cms.untracked.PSet(
 # Input source
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring('file:step2.root'),
+    #fileNames = cms.untracked.vstring('file:step2_pt30_eta21_run0.root'),
     secondaryFileNames = cms.untracked.vstring()
 )
 
@@ -194,14 +195,33 @@ process.L1Reco_step = cms.Path(process.L1Reco)
 #disable all TiCL iterations but EM one.
 
 process.filteredLayerClustersEM.LayerClustersInputMask = cms.InputTag('hgcalLayerClusters', 'InitialLayerClustersMask')
-process.ticlTrackstersEM.original_mask = cms.InputTag('hgcalLayerClusters', 'InitialLayerClustersMask')
+process.filteredLayerClustersEM.min_cluster_size = cms.int32(1)
 
-process.ticlCandidateFromTracksters.tracksterCollections = cms.VInputTag(
-    #'trackstersTrk',
-    #'trackstersMIP',
-    'ticlTrackstersEM'
-    #'trackstersHAD'
-  )
+process.ticlTrackstersEM.original_mask = cms.InputTag('hgcalLayerClusters', 'InitialLayerClustersMask')
+#process.ticlTrackstersMerge
+#process.ticlMultiClustersFromTrackstersMerge
+
+#relax parameters to find lower pT photons
+process.ticlTrackstersEM.algo_verbosity = cms.int32(0)
+process.ticlTrackstersEM.eid_min_cluster_energy = cms.double(1)#def 1
+process.ticlTrackstersEM.eid_n_clusters = cms.int32(10)#def 10
+process.ticlTrackstersEM.eid_n_layers = cms.int32(50)
+process.ticlTrackstersEM.etaLimitIncreaseWindow = cms.double(2.1)
+process.ticlTrackstersEM.filter_on_categories = cms.vint32(0, 1)
+process.ticlTrackstersEM.max_delta_time = cms.double(3)
+process.ticlTrackstersEM.max_out_in_hops = cms.int32(4)
+#process.ticlTrackstersEM.min_clusters_per_ntuplet = cms.int32(10)#def 10
+process.ticlTrackstersEM.min_cos_pointing = cms.double(0.5)#def 0.9
+process.ticlTrackstersEM.min_cos_theta = cms.double(0.5)#def 0.978
+#process.ticlTrackstersEM.missing_layers = cms.int32(1)
+##new parameters
+process.ticlTrackstersEM.energy_em_over_total_threshold = cms.double(0.)
+process.ticlTrackstersEM.max_longitudinal_sigmaPCA = cms.double(9999)
+process.ticlTrackstersEM.max_missing_layers_in_trackster = cms.int32(9999)
+process.ticlTrackstersEM.min_layers_per_trackster = cms.int32(5)
+process.ticlTrackstersEM.pid_threshold = cms.double(-1.0)
+process.ticlTrackstersEM.shower_start_max_layer = cms.int32(9999)
+process.ticlTrackstersEM.skip_layers = cms.int32(0)
 
 
 process.reconstruction_step = cms.Path(process.reconstruction)

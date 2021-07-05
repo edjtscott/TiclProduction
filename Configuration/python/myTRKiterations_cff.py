@@ -55,7 +55,7 @@ ticlTrackstersTRK3.itername = cms.string('TRK3')
 
 
 trk_task = cms.Task(
-    ticlSeedingTrk,filteredLayerClustersALL1,ticlTrackstersTRK1,
-    ticlSeedingTrk,filteredLayerClustersALL2,ticlTrackstersTRK2,
+    #ticlSeedingTrk,filteredLayerClustersALL1,ticlTrackstersTRK1,
+    #ticlSeedingTrk,filteredLayerClustersALL2,ticlTrackstersTRK2,
     ticlSeedingTrk,filteredLayerClustersALL3,ticlTrackstersTRK3
 )
