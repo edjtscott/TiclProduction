@@ -227,7 +227,8 @@ condorFile.write('universe = vanilla\n')
 if not opt.skipStep1 :
     condorFile.write('+JobFlavour = "nextweek"\n')
 else:
-    condorFile.write('+JobFlavour = "tomorrow"\n')
+    #condorFile.write('+JobFlavour = "tomorrow"\n')
+    condorFile.write('+JobFlavour = "testmatch"\n')
 condorFile.write('Executable = %s/runJob.sh\n'%outDirSub)
 if not opt.skipStep1 :
     condorFile.write('Arguments = --run $(Process) --seed $(SEED)\n')
